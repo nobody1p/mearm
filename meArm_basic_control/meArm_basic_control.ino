@@ -1,34 +1,34 @@
 #include <Servo.h>
 char command;
 int runSpeed;
-int clawRos;
+int clawRos=45;
 const int rosMin=0;
-const int baseMax;
-const int rightMax;
-const int leftMax;
-const int clawMax;
-const int runSpeedMax;
+const int baseMax=100;
+const int rightMax=100;
+const int leftMax=100;
+const int clawMax=100;
+const int runSpeedMax=100;
+Servo base;
+Servo right;
+Servo left;
+Servo claw;
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(9600);
-Servo.base;
-Servo.right;
-Servo.left;
-Servo.claw;
-base.attach(S1);
-left.attach(S2);
-right.attach(S3);
-claw.attach(S4);
+base.attach(D9);
+left.attach(D8);
+right.attach(D7);
+claw.attach(D6);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  if(Serial.available()>0){
 command=Serial.read();
 switch(command){
 case'o':
 case'O':
-  clawRos= claw.read();
   clawRos+=10;
   if(clawRos>clawMax){
     Serial.println("已经达到最大钳宽");
@@ -36,13 +36,12 @@ case'O':
     break;
   }
 claw.write(clawRos);
-Serial.print("当前钳宽：”);
+Serial.print("当前钳宽：");
 Serial.println(clawRos);
 break;
 
 case's':
 case'S':
-  clawRos= claw.read();
   clawRos-=10;
   if(clawRos<=0){
     Serial.println("已经达到最小钳宽");
@@ -50,7 +49,7 @@ case'S':
     break;
   }
 claw.write(clawRos);
-Serial.print("当前钳宽：”);
+Serial.print("当前钳宽：");
 Serial.println(clawRos);
 break;
 
@@ -62,7 +61,7 @@ case'H':
   runSpeed-=10;
   break;
   }
-  Serial.print("当前运行速度：”);
+  Serial.print("当前运行速度：");
   Serial.println(runSpeed);
 break;
 
@@ -74,7 +73,7 @@ case'L':
   runSpeed+=10;
   break;
   }
-  Serial.print("当前运行速度：”);
+  Serial.print("当前运行速度：");
   Serial.println(runSpeed);
   break;
 
@@ -85,4 +84,5 @@ case'L':
 关于多舵机的协调控制模块，我想完成一个算法，建立以claw为坐标原点，垂直地面为z轴，垂直
 前面板为y轴，平行前面板为x轴的坐标系，使机械臂能根据base right left三个舵机的角度数据，
 计算出claw的实时坐标位置，实现精准抓取，目前正在思考实现方法*/
+}
 }
