@@ -1,5 +1,5 @@
 #include <Servo.h>
-char command;
+char command1;
 int runSpeed;
 int clawRos;
 const int rosMin=0;
@@ -11,8 +11,8 @@ const int runSpeedMax=100;
 Servo base,right,left,claw;
 
 void task_1_basicControl(){
-  command=Serial.read();
-switch(command){
+  command1=Serial.read();
+switch(command1){
 case'o':
 case'O':
   clawRos-=10;
@@ -91,6 +91,6 @@ clawRos=70;
 void loop() {
   // put your main code here, to run repeatedly:
   if(Serial.available()>0){
-  task_1_basicControl();
+  task_1_basicControl();//后期合并时再写一段判断语句，来导向不同函数
 }
 }
