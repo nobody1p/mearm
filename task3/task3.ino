@@ -39,7 +39,11 @@ if (analogRead(A0) < 400) {
       baseRos = base.read();
       base.write((base.read() + 1));
 <<<<<<< HEAD
+<<<<<<< HEAD
       delay(10);
+=======
+      delay(runSpeed);
+>>>>>>> 400ec82 (meArm运动学反解算法)
 =======
       delay(runSpeed);
 >>>>>>> 400ec82 (meArm运动学反解算法)
