@@ -12,6 +12,8 @@ int base_current_angle;
 int left_current_angle;
 int right_current_angle;
 int claw_current_angle;
+char serialCmd;
+char servoCmd;
 float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
 float L1=63.5;
 float L2=112;
@@ -28,7 +30,7 @@ if (analogRead(A0) < 400) {
     if (base.read() > 0) {
       baseRos = base.read();
       base.write((base.read() - 1));
-      delay(10);
+      delay(runSpeed);
 
     }
 
@@ -36,7 +38,11 @@ if (analogRead(A0) < 400) {
     if (base.read() < 180) {
       baseRos = base.read();
       base.write((base.read() + 1));
+<<<<<<< HEAD
       delay(10);
+=======
+      delay(runSpeed);
+>>>>>>> 400ec82 (meArm运动学反解算法)
 
     }
   }
@@ -44,7 +50,7 @@ if (analogRead(A0) < 400) {
     if (left.read() > 0) {
       leftRos = left.read();
       left.write((left.read() - 1));
-      delay(10);
+      delay(runSpeed);
 
     }
 
@@ -52,7 +58,7 @@ if (analogRead(A0) < 400) {
     if (left.read() < 180) {
       leftRos = left.read();
       left.write((left.read() + 1));
-      delay(10);
+      delay(runSpeed);
 
     }
   }
@@ -60,7 +66,7 @@ if (analogRead(A0) < 400) {
     if (right.read() > 0) {
       rightRos = right.read();
       right.write((right.read() - 1));
-      delay(10);
+      delay(runSpeed);
 
     }
 
@@ -68,7 +74,7 @@ if (analogRead(A0) < 400) {
     if (right.read() < 180) {
       rightRos = right.read();
       right.write((right.read() + 1));
-      delay(10);
+      delay(runSpeed);
 
     }
   }
@@ -76,7 +82,7 @@ if (analogRead(A0) < 400) {
     if (claw.read() > 0) {
       clawRos = claw.read();
       claw.write((claw.read() - 1));
-      delay(10);
+      delay(runSpeed);
 
     }
 
@@ -84,7 +90,7 @@ if (analogRead(A0) < 400) {
     if (claw.read() < 180) {
       clawRos = claw.read();
       claw.write((claw.read() + 1));
-      delay(10);
+      delay(runSpeed);
 
     }
   }//摇杆操控函数
