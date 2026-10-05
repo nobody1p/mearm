@@ -14,12 +14,13 @@ const int leftMax=100;
 const int clawMax=180;
 const int runSpeedMax=100;
 Servo base,right,left,claw;
+
 void Kinematics(float x,float y,float z){
 rad1 = atan2(y,x);
 r = sqrt(x*x + y*y);
 d = sqrt(r*r+z*z);
 rad3 = PI-acos((L1*L1+L2*L2-d*d)/(2*L1*L2));
-rad2 = atan2(z,r)-atan2(L2*sin(rad3),L1+L2*cos(rad3));
+rad2 = atan2(z,r)+atan2(L2*sin(rad3),L1+L2*cos(rad3));
 angle1 = rad1*(180/PI);
 angle2 = rad2*(180/PI);
 angle3 = rad3*(180/PI);
@@ -55,13 +56,13 @@ void loop() {
     Kinematics(x,y,z);
     Serial.println(angle1);
     Serial.println(angle2);
-    Serial.println(angle3);
+    Serial.println(angle3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               );
     while (Serial.available()) {
   Serial.read();
 }
 delay(500);
 base.write(angle1); 
 left.write(angle3); 
-right.write(-angle2);
+right.write(angle2);
 }
 }
