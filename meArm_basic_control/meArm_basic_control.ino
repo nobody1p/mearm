@@ -1,8 +1,16 @@
 #include <Servo.h>
 #include <math.h>
 char command;
-int runSpeed;
+int runSpeed=15;
 int clawRos;
+int baseRos;
+int rightRos;
+int leftRos;
+int temp;
+
+float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
+float L1=63.5;
+float L2=112;
 const int rosMin=0;
 const int baseMax=100;
 const int rightMax=100;
