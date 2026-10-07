@@ -2,7 +2,6 @@
 #include <math.h>
 char command;
 int runSpeed;
-int clawRos;
 int temp;
 int tenet;
 int record;
@@ -22,6 +21,10 @@ int b_toRos;
 int l_toRos;
 int r_toRos;
 int c_toRos;
+int clawRos;
+int baseRos;
+int rightRos;
+int leftRos;
 float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
 float L1=63.5;
 float L2=112;
@@ -59,9 +62,9 @@ void loop() {
   Serial.println("3:");
   Serial.println("4:");
   Serial.println("若要退出使用中的模块,请输入0");
-if(Serial.avaluable())
+if(Serial.available())
 serialCmd = Serial.read();
-switch(SerialCmd){
+switch(serialCmd){
   case 1:
   if(Serial.available()){
     servoCmd = Serial.read();
@@ -90,7 +93,7 @@ switch(SerialCmd){
   }
   }
   default:
-  println("unknown command");
+  Serial.println("unknown command");
   break;
 }
 }

@@ -3,6 +3,9 @@
 char command;
 int runSpeed;
 int clawRos;
+int baseRos;
+int rightRos;
+int leftRos;
 int temp;
 int tenet;
 int record;

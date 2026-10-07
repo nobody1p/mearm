@@ -72,6 +72,30 @@ case'L':
   Serial.println(runSpeed);
   break;
 
+case 'b':
+case 'B':
+ baseRos = Serial.parseInt();
+ base.write(baseRos);
+ break;
+
+case 'e':
+case 'E':
+ leftRos = Serial.parseInt();
+ left.write(leftRos);
+ break;
+
+case 'r':
+case 'R':
+ rightRos = Serial.parseInt();
+ right.write(rightRos);
+ break;
+
+case 'c':
+case 'C':
+ clawRos = Serial.parseInt();
+ claw.write(clawRos);
+ break;
+
   default:
   Serial.println("Unknow Command");
     break;

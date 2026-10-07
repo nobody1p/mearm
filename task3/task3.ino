@@ -1,9 +1,16 @@
 #include <Servo.h>
 #include <math.h>
+int record1[100];
+int record2[100];
+int record3[100];
+int record4[100];
+int temp = -1;
 char command;
-int runSpeed;
+int runSpeed = 15;
 int clawRos;
-int temp;
+int baseRos;
+int rightRos;
+int leftRos;
 int tenet;
 int record;
 int play;
@@ -14,6 +21,14 @@ int right_current_angle;
 int claw_current_angle;
 char serialCmd;
 char servoCmd;
+int b_fromRos;
+int l_fromRos;
+int r_fromRos;
+int c_fromRos;
+int b_toRos;
+int l_toRos;
+int r_toRos;
+int c_toRos;
 float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
 float L1=63.5;
 float L2=112;
@@ -25,7 +40,7 @@ const int clawMax=180;
 const int runSpeedMax=100;
 Servo base,right,left,claw;
 
-joystick_control(){
+void joystick_control(){
 if (analogRead(A0) < 400) {
     if (base.read() > 0) {
       baseRos = base.read();
@@ -38,16 +53,7 @@ if (analogRead(A0) < 400) {
     if (base.read() < 180) {
       baseRos = base.read();
       base.write((base.read() + 1));
-<<<<<<< HEAD
-<<<<<<< HEAD
-      delay(10);
-=======
       delay(runSpeed);
->>>>>>> 400ec82 (meArm运动学反解算法)
-=======
-      delay(runSpeed);
->>>>>>> 400ec82 (meArm运动学反解算法)
-
     }
   }
   if (analogRead(A1) < 400) {
@@ -123,17 +129,17 @@ base.write(90);
 left.write(90); 
 right.write(90);
 claw.write(70);
-pinMode(D1,INPUT_PULLUP)
-pinMode(D2,INPUT_PULLUP)
-pinMode(D5,INPUT_PULLUP)
-pinMode(D6,INPUT_PULLUP)
+pinMode(D1,INPUT_PULLUP);
+pinMode(D2,INPUT_PULLUP);
+pinMode(D5,INPUT_PULLUP);
+pinMode(D6,INPUT_PULLUP);
 clawRos=70;
   delay(300); 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  joystick_control()
+  joystick_control();
   tenet = digitalRead(D1);
   record = digitalRead(D2);
   play = digitalRead(D5);
@@ -142,31 +148,38 @@ void loop() {
     
   }
   if(record == 0){
-    base_current_angle = analogRead(A0);
-    left_current_angle = analogRead(A1);
-    right_current_angle = analogRead(A2);
-    claw_current_angle = analogRead(A3);
-    for(int i=0;;i++){
-    joystick_control()
-int records1[i]=analogRead(A0);
-int records2[i]=analogRead(A1);
-int records3[i]=analogRead(A2);
-int records4[i]=analogRead(A3);
+    base_current_angle = base.read();
+    left_current_angle = left.read();
+    right_current_angle = right.read();
+    claw_current_angle = claw.read();
     delay(300);
+    for(int i=0;;i++){
+    joystick_control();
+record1[i]=base.read();
+record2[i]=left.read();
+record3[i]=right.read();
+record4[i]=claw.read();
+record = digitalRead(D2);
+temp=i;
+    delay(100);
     if(record == 0){
+      delay(300);
       break;
     }
   }
-  if(paly == 0){
+  }
+  if(play == 0){
     base.write(base_current_angle);
     left.write(left_current_angle);
     right.write(right_current_angle);
     claw.write(claw_current_angle);
-    for(int i=0;;i++){
+    delay(300);
+    for(int i=0;i<=temp;i++){
     base.write(record1[i]);
     left.write(record2[i]);
     right.write(record3[i]);
     claw.write(record4[i]);
+    delay(runSpeed);
     }
   }
   if(back == 0){
@@ -174,5 +187,6 @@ int records4[i]=analogRead(A3);
     left.write(90); 
     right.write(90);
     claw.write(70);
+    delay(runSpeed);
   }
 }
