@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include <math.h>
+#include <Wire.h>
 char command;
 int runSpeed;
 int temp;
@@ -39,6 +40,7 @@ Servo base,right,left,claw;
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(9600);
+Wire.begin(8);
 base.attach(9);
 left.attach(8);
 right.attach(7);

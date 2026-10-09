@@ -47,27 +47,42 @@ base.write(90);
 left.write(90); 
 right.write(90);
 claw.write(70);
-pinMode(D1,INPUT_PULLUP)
-pinMode(D2,INPUT_PULLUP)
-pinMode(D5,INPUT_PULLUP)
-pinMode(D6,INPUT_PULLUP)
 clawRos=70;
   delay(300); 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-if(Serial.avaluable()){
+if(Serial.available()){
+  temp=Serial.read();
   switch(temp){
-    case A:
-    case a:
-    servo.write();
-    case B:
-    case b:
-    servo.write();
-    case C:
-    case c:
-    servo.write();
+    case 'A':
+    case 'a':
+    base.write(101);
+    delay(400);
+    right.write(122);
+    delay(400);
+    left.write(23);
+    delay(400);
+    claw.write(160);
+    delay(600);
+    left.write(90);
+    delay(400);
+    base.write(10);
+    delay(400);
+    right.write(63);
+    delay(400);
+    left.write(23);
+    delay(400);
+    claw.write(70);
+    delay(400);
+    break;
+    case 'B':
+    case 'b':
+    break;
+    case 'C':
+    case 'c':
+    break;
   }
 }
 }
