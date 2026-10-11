@@ -1,11 +1,7 @@
 #include <Servo.h>
 #include <math.h>
 char command;
-int runSpeed;
-int clawRos;
-int baseRos;
-int rightRos;
-int leftRos;
+int runSpeed =10;
 int temp;
 int tenet;
 int record;
@@ -25,6 +21,10 @@ int b_toRos;
 int l_toRos;
 int r_toRos;
 int c_toRos;
+int clawRos;
+int baseRos;
+int rightRos;
+int leftRos;
 float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
 float L1=63.5;
 float L2=112;
@@ -35,6 +35,30 @@ const int leftMax=100;
 const int clawMax=180;
 const int runSpeedMax=100;
 Servo base,right,left,claw;
+
+int baseMove(){
+b_fromRos+=(b_toRos-b_fromRos)*0.15;
+    base.write(b_fromRos);
+    delay(runSpeed);
+}
+
+int leftMove(){
+  l_fromRos+=(l_toRos-l_fromRos)*0.15;
+    left.write(l_fromRos);
+    delay(runSpeed);
+}
+
+int rightMove(){
+  r_fromRos+=(r_toRos-r_fromRos)*0.15;
+    right.write(r_fromRos);
+    delay(runSpeed);
+}
+
+int clawMove(){
+  c_fromRos+=(c_toRos-c_fromRos)*0.15;
+    claw.write(c_fromRos);
+    delay(runSpeed);
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -54,35 +78,50 @@ clawRos=70;
 void loop() {
   // put your main code here, to run repeatedly:
 if(Serial.available()){
-  temp=Serial.read();
-  switch(temp){
+  cmd=Serial.read();
+  switch(cmd){
     case 'A':
     case 'a':
-    base.write(101);
-    delay(400);
-    right.write(122);
-    delay(400);
-    left.write(23);
-    delay(400);
-    claw.write(160);
-    delay(600);
-    left.write(90);
-    delay(400);
-    base.write(10);
-    delay(400);
-    right.write(63);
-    delay(400);
-    left.write(23);
-    delay(400);
-    claw.write(70);
-    delay(400);
+    b_toRos=101;
+    l_toRos=23;
+    r_toRos=122;
+    c_toRos=100;
+    b_fromRos=90;
+    l_fromRos=90;
+    r_fromRos=90;
+    c_fromRos=70;
+    while((b_toRos-b_fromRos)>=1){
+    baseMove();
+    leftMove();
+    rightMove();
+    }
+    while((c_toRos-c_fromRos)>=1){
+    clawMove();
+  }
     break;
     case 'B':
     case 'b':
+    b_toRos=101;
+    l_toRos=23;
+    r_toRos=122;
+    c_toRos=100;
+    b_fromRos=90;
+    l_fromRos=90;
+    r_fromRos=90;
+    c_fromRos=70;
+    
     break;
     case 'C':
     case 'c':
-    break;
+    b_toRos=101;
+    l_toRos=23;
+    r_toRos=122;
+    c_toRos=100;
+    b_fromRos=90;
+    l_fromRos=90;
+    r_fromRos=90;
+    c_fromRos=70;
+    
   }
 }
 }

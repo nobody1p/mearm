@@ -7,7 +7,6 @@ int baseRos;
 int rightRos;
 int leftRos;
 int temp;
-
 float x,y,z,d,r,h1,h2,angle1,angle2,angle3,rad1,rad2,rad3;
 float L1=63.5;
 float L2=112;
@@ -96,9 +95,6 @@ case 'C':
  claw.write(clawRos);
  break;
 
-  default:
-  Serial.println("Unknow Command");
-    break;
 }
 /*以上为任务一中mearm机械臂的基础控制模块
 关于多舵机的协调控制模块，我想完成一个算法，建立以claw为坐标原点，垂直地面为z轴，垂直
