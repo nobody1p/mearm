@@ -32,6 +32,18 @@ bool tenet = false;
 bool record = false;
 bool play = false;
 bool back = false;
+bool taskA = false;
+bool taskAA = false;
+bool taskAAA = false;
+bool backB = false;
+bool taskB = false;
+bool taskBB = false;
+bool taskBBB = false;
+bool backB = false;
+bool taskC = false;
+bool taskCC = false;
+bool taskCCC = false;
+bool backC = false;
 
 // ========== 当前角度（各种命名都保留） ==========
 int base_current_angle;
@@ -57,12 +69,16 @@ int leftRos;
 float x, y, z, d, r, h1, h2;
 float angle1, angle2, angle3;
 float rad1, rad2, rad3;
-float L1 = 63.5;
-float L2 = 112;
+float L1 = 80;
+float L2 = 80;
+float L3 = 20;
+float H = 60;
 
 // ========== 介质变量 ==========
 int i = 0;
 bool recordStart = false;
+bool circle1 = false;
+bool circle2 = false;
 
 // ========= 摇杆操控函数 =========
 void joystick_control(){
@@ -132,7 +148,6 @@ if (analogRead(A0) < 400) {
 // ========= 基础操控函数 =========
 void task_1_basicControl(){
 switch(cmd){
-case'o':
 case'O':
   clawRos-=10;
   if(clawRos<0){
@@ -145,7 +160,6 @@ Serial.print("当前闭合度：");
 Serial.println(clawRos);
 break;
 
-case's':
 case'S':
   clawRos+=10;
   if(clawRos>clawMax){
@@ -158,7 +172,6 @@ Serial.print("当前闭合度：");
 Serial.println(clawRos);
 break;
 
-case'h':
 case'H':
   runSpeed+=10;
   if(runSpeed>runSpeedMax){
@@ -170,7 +183,6 @@ case'H':
   Serial.println(runSpeed);
 break;
 
-case'l':
 case'L':
   runSpeed-=10;
   if(runSpeed<0){
@@ -183,25 +195,21 @@ case'L':
   break;
 
 case 'b':
-case 'B':
  baseRos = Serial.parseInt();
  base.write(baseRos);
  break;
 
-case 'e':
-case 'E':
+case 'l':
  leftRos = Serial.parseInt();
  left.write(leftRos);
  break;
 
 case 'r':
-case 'R':
  rightRos = Serial.parseInt();
  right.write(rightRos);
  break;
 
-case 'j':
-case 'J':
+case 'c':
  clawRos = Serial.parseInt();
  claw.write(clawRos);
  break;
@@ -209,56 +217,231 @@ case 'J':
 }
 
 // ========= task2 ABC移动函数 =========
-void task2(){
-  switch(cmd){
-    case 'A':
-    case 'a':
-    b_toRos=101;
-    l_toRos=23;
-    r_toRos=122;
-    c_toRos=100;
-    b_fromRos=90;
-    l_fromRos=90;
-    r_fromRos=90;
-    c_fromRos=70;
-    while((b_toRos-b_fromRos)>=1){
-    baseMove();
-    leftMove();
-    rightMove();
+void Amove(){
+if(taskA == true){
+    if(base_current_angle < 150) base_current_angle += 5;
+    if(left_current_angle > 0)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(base_current_angle > 150) base_current_angle = 150;
+    if(left_current_angle < 0)   left_current_angle = 0;
+    if(right_current_angle > 100) right_current_angle = 100;
+    left.write(left_current_angle);
+    right.write(right_current_angle);
+    base.write(base_current_angle);
+    delay(runSpeed);
+    if((base_current_angle==150)&&(left_current_angle==0)&&(right_current_angle==100)){
+      claw.write(120);
+      taskA=false;
+      taskAA=true;
+      delay(500);
     }
-    while((c_toRos-c_fromRos)>=1){
-    clawMove();
-  }
-    break;
-    case 'B':
-    case 'b':
-    b_toRos=101;
-    l_toRos=23;
-    r_toRos=122;
-    c_toRos=100;
-    b_fromRos=90;
-    l_fromRos=90;
-    r_fromRos=90;
-    c_fromRos=70;
-    
-    break;
-    case 'C':
-    case 'c':
-    b_toRos=101;
-    l_toRos=23;
-    r_toRos=122;
-    c_toRos=100;
-    b_fromRos=90;
-    l_fromRos=90;
-    r_fromRos=90;
-    c_fromRos=70; 
-  }
+}
+    if(taskAA == true){
+     if(base_current_angle > 110) base_current_angle -= 5;  
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle < 110) base_current_angle = 110;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==110)&&(left_current_angle==90)&&(right_current_angle==90)){
+        taskAA=false;
+        taskAAA=true;
+        delay(500);
+      }
+    }
+    if(taskAAA == true){
+    if(left_current_angle > 0)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(left_current_angle < 0)   left_current_angle = 0;
+    if(right_current_angle > 100) right_current_angle = 100;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      delay(runSpeed);
+      if((left_current_angle==0)&&(right_current_angle==100)){
+        claw.write(70);
+        taskAAA=false;
+        backA=true;
+        delay(500);
+      }
+    }
+    if(backA==true){
+    if(base_current_angle > 90) base_current_angle -= 5;   
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle < 90) base_current_angle = 90;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==90)&&(left_current_angle==90)&&(right_current_angle==90)){
+        backA=false;
+        delay(500);
+      }
+    }
+    taskA=!taskA;
+}
+
+void Bmove(){
+if(taskB == true){
+    if(left_current_angle > 30)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(left_current_angle < 30)   left_current_angle = 30;
+    if(right_current_angle > 100) right_current_angle = 100;
+    left.write(left_current_angle);
+    right.write(right_current_angle);
+    base.write(base_current_angle);
+    delay(runSpeed);
+    if(((left_current_angle==30)&&(right_current_angle==100)){
+      claw.write(120);
+      taskB=false;
+      taskBB=true;
+      delay(500);
+    }
+}
+    if(taskBB == true){
+     if(base_current_angle > 60) base_current_angle -= 5;  
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle < 60) base_current_angle = 60;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==60)&&(left_current_angle==90)&&(right_current_angle==90)){
+        taskBB=false;
+        taskBBB=true;
+        delay(500);
+      }
+    }
+    if(taskBBB == true){
+    if(left_current_angle > 30)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(left_current_angle < 30)   left_current_angle = 30;
+    if(right_current_angle > 100) right_current_angle = 100;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      delay(runSpeed);
+      if((left_current_angle==30)&&(right_current_angle==100)){
+        claw.write(70);
+        taskBBB=false;
+        backB=true;
+        delay(500);
+      }
+    }
+    if(backB==true){
+    if(base_current_angle < 90) base_current_angle += 5;   
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle > 90) base_current_angle = 90;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==90)&&(left_current_angle==90)&&(right_current_angle==90)){
+        backB=false;
+        delay(500);
+      }
+    }
+    taskB=!taskB;
+}
+
+void Cmove(){
+if(taskC == true){
+    if(base_current_angle > 30) base_current_angle -= 5;
+    if(left_current_angle > 0)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(base_current_angle > 30) base_current_angle = 30;
+    if(left_current_angle < 0)   left_current_angle = 0;
+    if(right_current_angle > 100) right_current_angle = 100;
+    left.write(left_current_angle);
+    right.write(right_current_angle);
+    base.write(base_current_angle);
+    delay(runSpeed);
+    if((base_current_angle==30)&&(left_current_angle==0)&&(right_current_angle==100)){
+      claw.write(120);
+      taskC=false;
+      taskCC=true;
+      delay(500);
+    }
+}
+    if(taskCC == true){
+     if(base_current_angle < 100) base_current_angle += 5;  
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle > 100) base_current_angle = 100;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==100)&&(left_current_angle==90)&&(right_current_angle==90)){
+        taskCC=false;
+        taskCCC=true;
+        delay(500);
+      }
+    }
+    if(taskCCC == true){
+    if(left_current_angle > 0)   left_current_angle -= 5;
+    if(right_current_angle < 100) right_current_angle += 5;
+
+    if(left_current_angle < 0)   left_current_angle = 0;
+    if(right_current_angle > 100) right_current_angle = 100;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      delay(runSpeed);
+      if((left_current_angle==0)&&(right_current_angle==100)){
+        claw.write(70);
+        taskCCC=false;
+        backC=true;
+        delay(500);
+      }
+    }
+    if(backC==true){
+    if(base_current_angle > 90) base_current_angle -= 5;   
+    if(left_current_angle < 90)  left_current_angle += 5;   
+    if(right_current_angle > 90) right_current_angle -= 5; 
+
+    if(base_current_angle < 90) base_current_angle = 90;
+    if(left_current_angle > 90)  left_current_angle = 90;
+    if(right_current_angle < 90) right_current_angle = 90;
+      left.write(left_current_angle);
+      right.write(right_current_angle);
+      base.write(base_current_angle);
+      delay(runSpeed);
+      if((base_current_angle==90)&&(left_current_angle==90)&&(right_current_angle==90)){
+        backC=false;
+        delay(500);
+      }
+    }
+    task=!taskC;
 }
 
 // ========= 机械臂运动学反解函数 =========
 void Kinematics(float x,float y,float z){
 rad1 = atan2(y,x);
-r = sqrt(x*x + y*y);
+r = sqrt(x*x + y*y) - L3;
+z = z - H;
 d = sqrt(r*r+z*z);
 rad3 = PI-acos((L1*L1+L2*L2-d*d)/(2*L1*L2));
 rad2 = atan2(z,r)+atan2(L2*sin(rad3),L1+L2*cos(rad3));
@@ -269,25 +452,25 @@ angle3 = rad3*(180/PI);
 
 // ========= 四舵机低通滤波运动函数 =========
 int baseMove(int b_fromRos,int b_toRos){
-  b_fromRos+=(b_fromRos-b_toRos)*0.15;
+  b_fromRos+=(b_fromRos-b_toRos)*0.25;
     base.write(b_fromRos);
     delay(runSpeed);
 }
 
 int leftMove(int l_fromRos,int l_toRos){
-  l_fromRos+=(l_fromRos-l_toRos)*0.15;
+  l_fromRos+=(l_fromRos-l_toRos)*0.25;
     left.write(l_fromRos);
     delay(runSpeed);
 }
 
 int rightMove(int r_fromRos,int r_toRos){
-  r_fromRos+=(r_fromRos-r_toRos)*0.15;
+  r_fromRos+=(r_fromRos-r_toRos)*0.25;
     right.write(r_fromRos);
     delay(runSpeed);
 }
 
 int clawMove(int c_fromRos,int c_toRos){
-  c_fromRos+=(c_fromRos-c_toRos)*0.15;
+  c_fromRos+=(c_fromRos-c_toRos)*0.25;
     claw.write(c_fromRos);
     delay(runSpeed);
 }
@@ -303,8 +486,8 @@ void task3(){
     left_current_angle = left.read();
     right_current_angle = right.read();
     claw_current_angle = claw.read();
-    !record;
-    !recordStart;
+    record=!record;
+    recordStart=!recordStart;
     delay(300);
   }
 if(recordStart == true){
@@ -322,7 +505,7 @@ record4[i]=claw.read();
     }
     }
 
-  if(play == 0){
+  if(play == true){
     base.write(base_current_angle);
     left.write(left_current_angle);
     right.write(right_current_angle);
@@ -335,9 +518,10 @@ record4[i]=claw.read();
     claw.write(record4[i]);
     delay(runSpeed);
     }
+    play=false;
   }
 
-  if(back == 0){
+  if(back == true){
     b_fromRos=base.read();
     l_fromRos=left.read();
     r_fromRos=right.read();
@@ -350,6 +534,7 @@ record4[i]=claw.read();
     leftMove(l_fromRos,l_toRos);
     rightMove(r_fromRos,r_toRos);
     clawMove(c_fromRos,c_toRos);
+    back = false;
   }
 }
 
@@ -425,29 +610,69 @@ void loop() {
 if(isPaused){
   return;
 }
+
 if(cmd == 'tenet'){
-  !tenet;
+  tenet=!tenet;
   cmd = 'sleep';
 }
 
+if(tenet == true){
+  if(circle1 == false){
+    taskA = !taskA;
+    circle1 = true;
+  }
+  else if(circle2 == false){
+    taskB = !taskB;
+    circle2 = true;
+  }
+  else{
+    taskC = !taskC;
+    circle1 = false;
+    circle2 = false;
+  }
+  tenet = false;  
+}
+
 if(cmd == 'play'){
-  !play;
+  play=!play;
   cmd = 'sleep';
 }
 
 if(cmd == 'record'){
-  !record;
+  record=!record;
   cmd = 'sleep';
 }
 
 if(cmd == 'back'){
-  !back;
+  back=!back;
   cmd = 'sleep';
 }
 
+if(cmd == 'A'){
+  taskA=!taskA;
+  cmd = 'sleep';
+}
+
+if(cmd == 'B'){
+  taskB=!taskB;
+  cmd = 'sleep';
+}
+
+if(cmd == 'C'){
+  taskC=!taskC;
+  cmd = 'sleep';
+}
+
+
 task_1_basicControl();
 
-task2();
+joystick_control();
+
+moveA();
+moveB();
+moveC(;
 
 task3();
+
+task5();
 }
