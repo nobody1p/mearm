@@ -18,15 +18,21 @@ const int runSpeedMax=100;
 Servo base,right,left,claw;
 
 void Kinematics(float x,float y,float z){
-rad1 = atan2(y,x);
 r = sqrt(x*x + y*y) - L3;
 z = z - H;
 d = sqrt(r*r+z*z);
+
+rad1 = atan2(y,x);
 rad3 = PI-acos((L1*L1+L2*L2-d*d)/(2*L1*L2));
 rad2 = atan2(z,r)+atan2(L2*sin(rad3),L1+L2*cos(rad3));
+
 angle1 = rad1*(180/PI);
 angle2 = rad2*(180/PI);
 angle3 = rad3*(180/PI);
+
+base_angle = 90 + angle1;
+left_angle = angle2 - angle3 + 60;
+right_angle = 150 - angle2
 }
 
 
