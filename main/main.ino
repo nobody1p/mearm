@@ -6,16 +6,14 @@ Servo base, right, left, claw;
 
 // ========== 示教记录 ==========
 float flag[4][5];
-int record1[300];
-int record2[300];
-int record3[300];
-int record4[300];
+byte record1[300];
+byte record2[300];
+byte record3[300];
+byte record4[300];
 int temp = -1;
 
 // ========== 状态与命令 ==========
 char cmd = 0;
-char serialCmd;
-char servoCmd;
 bool isPaused = false;
 
 // ========== 速度与控制 ==========
@@ -23,9 +21,6 @@ int runSpeed = 20;
 int runSpeedmin = 100;
 int runSpeedMax = 10;
 int rosMin = 0;
-const int baseMax = 100;
-const int rightMax = 100;
-const int leftMax = 100;
 const int clawMax = 180;
 
 // ========== 功能标志 ==========
@@ -72,7 +67,7 @@ int right_angle;
 int base_angle;
 
 // ========== 运动学变量 ==========
-float x, y, z, d, r, h1, h2;
+float x, y, z, d, r
 float angle1, angle2, angle3;
 float rad1, rad2, rad3;
 float L1 = 80;
@@ -83,8 +78,7 @@ float H = 60;
 // ========== 介质变量 ==========
 int i = 0;
 bool recordStart = false;
-bool circle1 = false;
-bool circle2 = false;
+int circle = 0;
 int pointIndex = 0;    
 int showIndex  = 0;    
 
@@ -105,7 +99,7 @@ float x1,x2,y1,y2,z1,z2;
 
 // ========== 时间片 ==========
 unsigned long lastTick = 0;
-unsigned long TICK_MS  = 20;
+unsigned long TICK_MS  = 2;
 
 // ========= 摇杆操控函数 =========
 void joystick_control(){
@@ -270,7 +264,7 @@ if(taskA == true){
     base.write(base_current_angle);
     delay(runSpeed);
     if((base_current_angle==150)&&(left_current_angle==0)&&(right_current_angle==100)){
-      claw.write(120);
+      claw.write(150);
       taskA=false;
       taskAA=true;
       delay(500);
@@ -341,7 +335,7 @@ if(taskB == true){
     base.write(base_current_angle);
     delay(runSpeed);
     if((left_current_angle==30)&&(right_current_angle==100)){
-      claw.write(120);
+      claw.write(150);
       taskB=false;
       taskBB=true;
       delay(500);
@@ -415,7 +409,7 @@ if(taskC == true){
     base.write(base_current_angle);
     delay(runSpeed);
     if((base_current_angle==30)&&(left_current_angle==0)&&(right_current_angle==100)){
-      claw.write(120);
+      claw.write(150);
       taskC=false;
       taskCC=true;
       delay(500);
@@ -474,7 +468,7 @@ if(taskC == true){
     }
 }
 
-// ========= 舵机角度限制函数 =========
+// ========= 舵机移动函数 =========
 void writeServo(float b, float l, float rr){
   if (b  < 0)   b  = 0;
   if (b  > 180) b  = 180;
@@ -509,7 +503,7 @@ left_angle = angle2 - angle3 + 60;
 right_angle = 150 - angle2;
 }
 
-// ========= 机械臂运动学正解函数 =========
+// ========= 机械臂运动学逆解函数 =========
 void ForwardKinematics() {
   angle1 = base.read()-90;
   angle2 = 150 - right.read();
@@ -544,8 +538,8 @@ void straight_line_prepare(float x1,float x2,float y1,float y2,float z1,float z2
 }
 
 // ========= 直线函数 =========
-bool straight_line(){
-  if (next != true) return true;
+ void straight_line(){
+  if (next == true) {
 
   x_now = x_now + dx;
   y_now = y_now + dy;
@@ -558,9 +552,8 @@ bool straight_line(){
   if (n >= N){
     next = false;
     n = 0;
-    return true;
   }
-  return false;
+  }
 }
 
 // ========= 四舵机低通滤波运动函数 =========
@@ -590,8 +583,6 @@ void clawMove(int c_fromRos,int c_toRos){
 
 // =========任务三 循环 记录 播放 回中 函数=========
 void task3(){
-  joystick_control();
-
   if(record == true){
     if(recordStart == false){    
       i = 0;
@@ -682,8 +673,6 @@ void cancel(){
     preDraw = false;
     end = false;
     recordStart = false;
-    circle1 = false;
-    circle2 = false;
     isPaused = false;
     next = false;
     back = true;
@@ -746,6 +735,10 @@ void show(){
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(9600);
+delay(500); 
+  while(Serial.available()) {
+    Serial.read();   
+  }
 base.attach(9);
 left.attach(8);
 right.attach(7);
@@ -773,25 +766,23 @@ if(isPaused){
 }
 
 if(cmd == 't'){
-  tenet=!tenet;
+  tenet=true;
   cmd = 0;
 }
 
 if(tenet == true){
-  if(circle1 == false){
-    taskA = !taskA;
-    circle1 = true;
+  if(circle >= 3) circle = 0;
+  if(circle == 0){
+    taskA = true;
   }
-  else if(circle2 == false){
-    taskB = !taskB;
-    circle2 = true;
+  else if(circle == 1){
+    taskB = true;
   }
-  else{
-    taskC = !taskC;
-    circle1 = false;
-    circle2 = false;
+  else if(circle == 2){
+    taskC = true;
   }
-  tenet = false;  
+  circle++;
+  tenet = false;   
 }
 
 if(cmd == 'P'){

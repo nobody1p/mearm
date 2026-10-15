@@ -17,22 +17,31 @@ bool wait4 = false;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  delay(200);
+  for(int i = 0; i < 150; i++) {
+    Serial.write('\n');
+  }
+  delay(100);
+  while(Serial.available()) {
+    Serial.read();
+  }
   pinMode(5,INPUT_PULLUP);
   pinMode(4,INPUT_PULLUP);
-  pinMode(14,INPUT_PULLUP);
-  pinMode(12,INPUT_PULLUP);
+  pinMode(13,INPUT_PULLUP);
+  pinMode(0,INPUT_PULLUP);
   lastState1 = digitalRead(5);
   lastState2 = digitalRead(4);
-  lastState3 = digitalRead(14);
-  lastState4 = digitalRead(12);
+  lastState3 = digitalRead(13);
+  lastState4 = digitalRead(0);
+  Serial.println("ESP8266 ready");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   bool now1 = digitalRead(5);
   bool now2 = digitalRead(4);
-  bool now3 = digitalRead(14);
-  bool now4 = digitalRead(12);
+  bool now3 = digitalRead(13);
+  bool now4 = digitalRead(0);
   unsigned long t = millis();
 
 if(lastState1 == HIGH && now1 == LOW){
@@ -45,7 +54,7 @@ if(lastState1 == LOW && now1 == LOW && !wait1){
       wait1 = true;
     }
   }
-  if(lastState1 == LOW && now1 == HIGH){
+if(lastState1 == LOW && now1 == HIGH){
     if(!wait1){
     Serial.write('t');
   }
