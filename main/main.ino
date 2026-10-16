@@ -17,7 +17,7 @@ char cmd = 0;
 bool isPaused = false;
 
 // ========== 速度与控制 ==========
-int runSpeed = 20;
+int runSpeed = 30;
 int runSpeedmin = 100;
 int runSpeedMax = 10;
 int rosMin = 0;
@@ -67,7 +67,7 @@ int right_angle;
 int base_angle;
 
 // ========== 运动学变量 ==========
-float x, y, z, d, r
+float x, y, z, d, r;
 float angle1, angle2, angle3;
 float rad1, rad2, rad3;
 float L1 = 80;
@@ -99,7 +99,7 @@ float x1,x2,y1,y2,z1,z2;
 
 // ========== 时间片 ==========
 unsigned long lastTick = 0;
-unsigned long TICK_MS  = 2;
+unsigned long TICK_MS  = 5;
 
 // ========= 摇杆操控函数 =========
 void joystick_control(){
@@ -253,31 +253,32 @@ case 'c':
 void Amove(){
 if(taskA == true){
     if(base_current_angle < 150) base_current_angle += 5;
-    if(left_current_angle > 0)   left_current_angle -= 5;
-    if(right_current_angle < 100) right_current_angle += 5;
+    if(left_current_angle > 0)   left_current_angle -= 2;
+    if(right_current_angle < 110) right_current_angle += 2;
 
     if(base_current_angle > 150) base_current_angle = 150;
     if(left_current_angle < 0)   left_current_angle = 0;
-    if(right_current_angle > 100) right_current_angle = 100;
+    if(right_current_angle > 110) right_current_angle = 110;
     left.write(left_current_angle);
     right.write(right_current_angle);
     base.write(base_current_angle);
     delay(runSpeed);
-    if((base_current_angle==150)&&(left_current_angle==0)&&(right_current_angle==100)){
-      claw.write(150);
+    if((base_current_angle==150)&&(left_current_angle==0)&&(right_current_angle==110)){
+      claw.write(85);
       taskA=false;
       taskAA=true;
       delay(500);
     }
 }
     if(taskAA == true){
-     if(base_current_angle > 110) base_current_angle -= 5;  
-    if(left_current_angle < 90)  left_current_angle += 5;   
-    if(right_current_angle > 90) right_current_angle -= 5; 
+     if(base_current_angle > 110) base_current_angle -= 2;  
+    if(left_current_angle < 90)  left_current_angle += 2;   
+    if(right_current_angle > 90) right_current_angle -= 2; 
 
     if(base_current_angle < 110) base_current_angle = 110;
     if(left_current_angle > 90)  left_current_angle = 90;
     if(right_current_angle < 90) right_current_angle = 90;
+      claw.write(85);
       left.write(left_current_angle);
       right.write(right_current_angle);
       base.write(base_current_angle);
@@ -298,7 +299,7 @@ if(taskA == true){
       right.write(right_current_angle);
       delay(runSpeed);
       if((left_current_angle==0)&&(right_current_angle==100)){
-        claw.write(70);
+        claw.write(50);
         taskAAA=false;
         backA=true;
         delay(500);
@@ -325,26 +326,26 @@ if(taskA == true){
 
 void Bmove(){
 if(taskB == true){
-    if(left_current_angle > 30)   left_current_angle -= 5;
-    if(right_current_angle < 100) right_current_angle += 5;
+    if(left_current_angle > 50)   left_current_angle -= 2;
+    if(right_current_angle < 100) right_current_angle += 2;
 
-    if(left_current_angle < 30)   left_current_angle = 30;
+    if(left_current_angle < 50)   left_current_angle = 30;
     if(right_current_angle > 100) right_current_angle = 100;
     left.write(left_current_angle);
     right.write(right_current_angle);
     base.write(base_current_angle);
     delay(runSpeed);
-    if((left_current_angle==30)&&(right_current_angle==100)){
-      claw.write(150);
+    if((left_current_angle==50)&&(right_current_angle==100)){
+      claw.write(80);
       taskB=false;
       taskBB=true;
       delay(500);
     }
 }
     if(taskBB == true){
-    if(base_current_angle > 60) base_current_angle -= 5;  
-    if(left_current_angle < 90)  left_current_angle += 5;   
-    if(right_current_angle > 90) right_current_angle -= 5; 
+    if(base_current_angle > 60) base_current_angle -= 2;  
+    if(left_current_angle < 90)  left_current_angle += 2;   
+    if(right_current_angle > 90) right_current_angle -= 2; 
 
     if(base_current_angle < 60) base_current_angle = 60;
     if(left_current_angle > 90)  left_current_angle = 90;
@@ -361,8 +362,8 @@ if(taskB == true){
     }
 
     if(taskBBB == true){
-    if(left_current_angle > 30)   left_current_angle -= 5;
-    if(right_current_angle < 100) right_current_angle += 5;
+    if(left_current_angle > 30)   left_current_angle -= 2;
+    if(right_current_angle < 100) right_current_angle += 2;
 
     if(left_current_angle < 30)   left_current_angle = 30;
     if(right_current_angle > 100) right_current_angle = 100;
@@ -370,7 +371,7 @@ if(taskB == true){
       right.write(right_current_angle);
       delay(runSpeed);
       if((left_current_angle==30)&&(right_current_angle==100)){
-        claw.write(70);
+        claw.write(50);
         taskBBB=false;
         backB=true;
         delay(500);
@@ -397,28 +398,27 @@ if(taskB == true){
 
 void Cmove(){
 if(taskC == true){
-    if(base_current_angle > 30) base_current_angle -= 5;
-    if(left_current_angle > 0)   left_current_angle -= 5;
-    if(right_current_angle < 100) right_current_angle += 5;
+    base.write(30);
+    delay(100);
+    if(left_current_angle > 50)   left_current_angle -= 2;
+    if(right_current_angle < 110) right_current_angle += 2;
 
-    if(base_current_angle > 30) base_current_angle = 30;
-    if(left_current_angle < 0)   left_current_angle = 0;
-    if(right_current_angle > 100) right_current_angle = 100;
+    if(left_current_angle < 50)   left_current_angle = 50;
+    if(right_current_angle > 110) right_current_angle = 100;
     left.write(left_current_angle);
     right.write(right_current_angle);
-    base.write(base_current_angle);
     delay(runSpeed);
-    if((base_current_angle==30)&&(left_current_angle==0)&&(right_current_angle==100)){
-      claw.write(150);
+    if((left_current_angle==50)&&(right_current_angle==110)){
+      claw.write(80);
       taskC=false;
       taskCC=true;
       delay(500);
     }
 }
     if(taskCC == true){
-    if(base_current_angle < 100) base_current_angle += 5;  
-    if(left_current_angle < 90)  left_current_angle += 5;   
-    if(right_current_angle > 90) right_current_angle -= 5; 
+    if(base_current_angle < 100) base_current_angle += 2;  
+    if(left_current_angle < 90)  left_current_angle += 2;   
+    if(right_current_angle > 90) right_current_angle -= 2; 
 
     if(base_current_angle > 100) base_current_angle = 100;
     if(left_current_angle > 90)  left_current_angle = 90;
@@ -434,16 +434,16 @@ if(taskC == true){
       }
     }
     if(taskCCC == true){
-    if(left_current_angle > 0)   left_current_angle -= 5;
-    if(right_current_angle < 100) right_current_angle += 5;
+    if(left_current_angle > 50)   left_current_angle -= 2;
+    if(right_current_angle < 110) right_current_angle += 2;
 
-    if(left_current_angle < 0)   left_current_angle = 0;
-    if(right_current_angle > 100) right_current_angle = 100;
+    if(left_current_angle < 50)   left_current_angle = 50;
+    if(right_current_angle > 110) right_current_angle = 110;
       left.write(left_current_angle);
       right.write(right_current_angle);
       delay(runSpeed);
-      if((left_current_angle==0)&&(right_current_angle==100)){
-        claw.write(70);
+      if((left_current_angle==50)&&(right_current_angle==110)){
+        claw.write(50);
         taskCCC=false;
         backC=true;
         delay(500);
@@ -723,6 +723,7 @@ void show(){
         y2 = flag[1][showIndex+1];
         z2 = flag[2][showIndex+1];
         straight_line_prepare(x1,x2,y1,y2,z1,z2);
+        delay(runSpeed+200);
         showIndex++;
       } else {
         end = false;            
@@ -801,16 +802,19 @@ if(cmd == 'o'){
 }
 
 if(cmd == 'A'){
+  claw.write(50);
   taskA=!taskA;
   cmd = 0;
 }
 
 if(cmd == 'B'){
+  claw.write(50);
   taskB=!taskB;
   cmd = 0;
 }
 
 if(cmd == 'C'){
+  claw.write(50);
   taskC=!taskC;
   cmd = 0;
 }

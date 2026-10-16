@@ -37,12 +37,17 @@ void setup() {
 }
 
 void loop() {
+
   // put your main code here, to run repeatedly:
   bool now1 = digitalRead(5);
   bool now2 = digitalRead(4);
   bool now3 = digitalRead(13);
   bool now4 = digitalRead(0);
   unsigned long t = millis();
+  
+   if(Serial.available()) {
+    Serial.write(Serial.read());
+  }
 
 if(lastState1 == HIGH && now1 == LOW){
   pressTime1 = t;
@@ -51,12 +56,16 @@ if(lastState1 == HIGH && now1 == LOW){
 if(lastState1 == LOW && now1 == LOW && !wait1){
     if(t-pressTime1>=500){
       Serial.write('p');
+      Serial.println("\n");
       wait1 = true;
+      delay(500);
     }
   }
 if(lastState1 == LOW && now1 == HIGH){
     if(!wait1){
     Serial.write('t');
+    Serial.println("\n");
+    delay(500);
   }
   wait1 = false;
   }
@@ -69,12 +78,16 @@ if(lastState2 == HIGH && now2 == LOW){
   if(lastState2 == LOW && now2 == LOW && !wait2){
     if(t-pressTime2>=500){
       Serial.write('s');
+      Serial.println("\n");
       wait2 = true;
+      delay(500);
     }
   }
   if(lastState2 == LOW && now2 == HIGH){
     if(!wait2){
     Serial.write('R');
+    Serial.println("\n");
+    delay(500);
   }
   wait2 = false;
   }
@@ -87,12 +100,16 @@ if(lastState3 == HIGH && now3 == LOW){
   if(lastState3 == LOW && now3 == LOW && !wait3){
     if(t-pressTime3>=500){
       Serial.write('q');
+      Serial.println("\n");
       wait3 = true;
+      delay(500);
     }
   }
   if(lastState3 == LOW && now3 == HIGH){
     if(!wait3){
     Serial.write('P');
+    Serial.println("\n");
+    delay(500);
   }
   wait3 = false;
   }
@@ -105,12 +122,16 @@ if(lastState3 == HIGH && now3 == LOW){
   if(lastState4 == LOW && now4 == LOW && !wait4){
     if(t-pressTime4>=500){
       Serial.write('f');
+      Serial.println("\n");
       wait4 = true;
+      delay(500);
     }
   }
   if(lastState4 == LOW && now4 == HIGH){
     if(!wait4){
     Serial.write('o');
+    Serial.println("\n");
+    delay(500);
   }
   wait4 = false;
   }
